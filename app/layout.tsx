@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     "privacy",
   ],
   authors: [{ name: "BruteSafe" }],
+  icons: {
+    icon: "/favicon.svg",
+  },
   openGraph: {
     title: "BruteSafe — Password Security Toolkit",
     description:
@@ -39,7 +42,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body
+        className={`${inter.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

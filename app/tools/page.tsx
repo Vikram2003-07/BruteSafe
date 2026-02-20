@@ -604,73 +604,6 @@ function GeneratorSection() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Bulk generation */}
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Zap className="h-4 w-4" />
-                Bulk Generation
-              </CardTitle>
-              <CardDescription>
-                Generate multiple passwords at once
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 flex-1">
-                  <Label className="text-sm shrink-0">Count:</Label>
-                  <Input
-                    type="number"
-                    min={1}
-                    max={50}
-                    value={bulkCount}
-                    onChange={(e) =>
-                      setBulkCount(
-                        Math.min(
-                          50,
-                          Math.max(1, parseInt(e.target.value) || 1),
-                        ),
-                      )
-                    }
-                    className="w-20 h-9 bg-background/50"
-                  />
-                </div>
-                <Button
-                  onClick={handleBulkGenerate}
-                  className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0"
-                >
-                  Generate
-                </Button>
-              </div>
-              {bulkPasswords.length > 0 && (
-                <div className="space-y-2">
-                  <div className="max-h-64 overflow-y-auto rounded-lg border border-border/40 bg-background/30 p-3 space-y-1">
-                    {bulkPasswords.map((pw, i) => (
-                      <div
-                        key={i}
-                        className="font-mono text-sm text-muted-foreground truncate"
-                      >
-                        <span className="text-xs text-muted-foreground/50 mr-2">
-                          {i + 1}.
-                        </span>
-                        {pw}
-                      </div>
-                    ))}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleBulkExport}
-                    className="gap-2"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    Export to File
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </TabsContent>
 
         {/* Passphrase Tab */}
@@ -847,9 +780,13 @@ export default function ToolsPage() {
               </div>
 
               {/* Section Content */}
-              {index === 0 && <StrengthCheckerSection />}
-              {index === 1 && <BreachCheckSection />}
-              {index === 2 && <GeneratorSection />}
+              <Card className="border border-border/40 bg-background/20 backdrop-blur-sm rounded-xl shadow-sm">
+                <CardContent className="p-6">
+                  {index === 0 && <StrengthCheckerSection />}
+                  {index === 1 && <BreachCheckSection />}
+                  {index === 2 && <GeneratorSection />}
+                </CardContent>
+              </Card>
 
               {/* Divider (not on last) */}
               {index < sections.length - 1 && (

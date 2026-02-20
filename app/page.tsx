@@ -68,7 +68,7 @@ export default function HomePage() {
 
       <div className="relative">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 pt-20 pb-16 md:pt-32 md:pb-24 md:px-6">
+        <section className="container mx-auto px-4 pb-10 md:mt-0 md:pt-28 md:pb-24 md:px-6">
           <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-400 mb-8">
@@ -85,7 +85,7 @@ export default function HomePage() {
             </h1>
 
             {/* Subheadline */}
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl leading-loose">
               Evaluate password strength, check breach exposure, and generate
               secure passwords — all without compromising your privacy.{" "}
               <span className="text-foreground font-medium">
@@ -94,14 +94,14 @@ export default function HomePage() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+            <div className="mt-12 flex flex-col sm:flex-row items-center gap-6">
               <Button
                 asChild
                 size="lg"
                 className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white border-0 shadow-lg shadow-emerald-500/25 h-12 px-8 text-base"
               >
                 <Link href="/tools#strength-checker">
-                  Check Your Password
+                  Check Your Password Strength
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -109,7 +109,15 @@ export default function HomePage() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="h-12 px-8 text-base border-border/60"
+                className="h-12 px-8 text-base border-border/60 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg shadow-emerald-500/25"
+              >
+                <Link href="/tools#breach-check">Check Password Breach</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-12 px-8 text-base border-border/60 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0 shadow-lg shadow-emerald-500/25"
               >
                 <Link href="/tools#generator">Generate Secure Password</Link>
               </Button>
@@ -192,9 +200,7 @@ export default function HomePage() {
                 <span>All processing happens in your browser</span>
               </div>
               <p className="text-xs text-muted-foreground max-w-lg">
-                No passwords are ever stored, transmitted, or logged. Our
-                offline breach dataset is pre-downloaded — zero network requests
-                involve your sensitive data.
+                No passwords are ever stored, transmitted, or logged.
               </p>
             </div>
           </div>
