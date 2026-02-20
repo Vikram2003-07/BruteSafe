@@ -77,7 +77,7 @@ function StrengthCheckerSection() {
     <div className="space-y-8">
       {/* Password Input */}
       <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-        <CardContent className="pt-6">
+        <CardContent className="">
           <div className="relative">
             <Input
               id="password-input"
@@ -116,7 +116,7 @@ function StrengthCheckerSection() {
           {/* Stats Grid */}
           <div className="grid gap-4 sm:grid-cols-3">
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardContent className="pt-6">
+              <CardContent className="pt-2">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Zap className="h-4 w-4 text-amber-400" />
                   <span className="text-xs font-medium uppercase tracking-wider">
@@ -132,7 +132,7 @@ function StrengthCheckerSection() {
               </CardContent>
             </Card>
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardContent className="pt-6">
+              <CardContent className="pt-2">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Clock className="h-4 w-4 text-cyan-400" />
                   <span className="text-xs font-medium uppercase tracking-wider">
@@ -143,7 +143,7 @@ function StrengthCheckerSection() {
               </CardContent>
             </Card>
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardContent className="pt-6">
+              <CardContent className="pt-2">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Clock className="h-4 w-4 text-violet-400" />
                   <span className="text-xs font-medium uppercase tracking-wider">
@@ -269,7 +269,7 @@ function StrengthCheckerSection() {
       )}
 
       {!result && (
-        <div className="text-center py-8">
+        <div className="text-center py-2">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
             <Zap className="h-8 w-8 text-muted-foreground/50" />
           </div>
@@ -305,7 +305,7 @@ function BreachCheckSection() {
     <div className="space-y-8">
       {/* Password Input */}
       <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-        <CardContent className="pt-6">
+        <CardContent className="">
           <div className="flex gap-3">
             <div className="relative flex-1">
               <Input
@@ -334,7 +334,7 @@ function BreachCheckSection() {
             <Button
               onClick={handleCheck}
               disabled={loading || !passwordInput.trim()}
-              className="h-12 px-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0"
+              className="h-12 w-12 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0"
             >
               {loading ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -350,7 +350,7 @@ function BreachCheckSection() {
       {result && <BreachDisplay result={result} />}
 
       {!result && (
-        <div className="text-center py-8">
+        <div className="text-center py-2">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
             <Key className="h-8 w-8 text-muted-foreground/50" />
           </div>
@@ -371,8 +371,8 @@ function BreachCheckSection() {
             </CardTitle>
           </div>
           <CardDescription>
-            Your password never leaves your browser — only a tiny hash prefix is
-            sent
+            Your password is securely checked against Have I Been Pwned database
+            of breached passwords
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -493,6 +493,7 @@ function GeneratorSection() {
         <TabsContent value="password" className="space-y-6 mt-6">
           {password && (
             <PasswordCard
+              className="border-border/50 bg-card/50 backdrop-blur-sm"
               password={password}
               onRegenerate={regeneratePassword}
             />
