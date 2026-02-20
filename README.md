@@ -8,10 +8,11 @@
 
 > A comprehensive, all-in-one password security toolkit to generate secure passwords, analyze their strength, and detect potential data breaches — everything handled securely within your browser.
 
-## 🔐 Live Preview
 
-🚀 [Try BruteSafe Now](https://brute-safe.vercel.app/)
+##
+🚀**Live Preview of the Website, click the link :** [https://brute-safe.vercel.app/](https://brute-safe.vercel.app/)
 
+##
 ![image alt](https://github.com/Vikram2003-07/BruteSafe/blob/46c905444b4f002770eae36bd1b0028f9a6b5991/Screenshot%202026-02-21%20015821.png)
 ![image alt](https://github.com/Vikram2003-07/BruteSafe/blob/46c905444b4f002770eae36bd1b0028f9a6b5991/Screenshot%202026-02-21%20015934.png)
 ![image alt](https://github.com/Vikram2003-07/BruteSafe/blob/46c905444b4f002770eae36bd1b0028f9a6b5991/Screenshot%202026-02-21%20020007.png)
