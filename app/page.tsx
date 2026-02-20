@@ -25,7 +25,7 @@ const features = [
     title: "Password Strength Checker",
     description:
       "Real-time entropy analysis with brute-force time estimation and weakness detection.",
-    href: "/strength-checker",
+    href: "/tools#strength-checker",
     gradient: "from-emerald-500 to-teal-500",
     shadow: "shadow-emerald-500/20",
   },
@@ -34,7 +34,7 @@ const features = [
     title: "Data Breach Identifier",
     description:
       "Check passwords and emails against curated offline breach datasets using SHA-256 hashing.",
-    href: "/breach-check",
+    href: "/tools#breach-check",
     gradient: "from-orange-500 to-red-500",
     shadow: "shadow-orange-500/20",
   },
@@ -43,7 +43,7 @@ const features = [
     title: "Password Generator",
     description:
       "Cryptographically secure password and passphrase generation with customizable policies.",
-    href: "/generator",
+    href: "/tools#generator",
     gradient: "from-violet-500 to-purple-500",
     shadow: "shadow-violet-500/20",
   },
@@ -100,7 +100,7 @@ export default function HomePage() {
                 size="lg"
                 className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white border-0 shadow-lg shadow-emerald-500/25 h-12 px-8 text-base"
               >
-                <Link href="/strength-checker">
+                <Link href="/tools#strength-checker">
                   Check Your Password
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -111,7 +111,7 @@ export default function HomePage() {
                 size="lg"
                 className="h-12 px-8 text-base border-border/60"
               >
-                <Link href="/generator">Generate Secure Password</Link>
+                <Link href="/tools#generator">Generate Secure Password</Link>
               </Button>
             </div>
           </div>

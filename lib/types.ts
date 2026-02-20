@@ -16,19 +16,12 @@ export interface PasswordStrengthResult {
   };
 }
 
-export interface BreachRecord {
-  source: string;
-  date: string;
-  severity: "low" | "medium" | "high" | "critical";
-  affectedCount: number;
-}
-
 export interface BreachCheckResult {
   isBreached: boolean;
   breachCount: number;
-  breaches: BreachRecord[];
   riskLevel: "low" | "medium" | "high" | "critical";
   hash?: string;
+  error?: string;
 }
 
 export interface GeneratorConfig {

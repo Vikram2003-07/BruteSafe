@@ -1,150 +1,103 @@
 "use client";
 
-import type { BreachCheckResult, BreachRecord } from "@/lib/types";
-import {
-  BREACHED_PASSWORD_HASHES,
-  BREACHED_EMAIL_PATTERNS,
-  BREACH_SOURCES,
-} from "@/lib/constants/breach-data";
+import type { BreachCheckResult } from "@/lib/types";
 
 /**
- * Compute SHA-256 hash of a string using the Web Crypto API
+ * Compute SHA-1 hash of a string using the Web Crypto API
+ * HIBP Pwned Passwords uses SHA-1 for k-anonymity lookups
  */
-async function sha256(message: string): Promise<string> {
+async function sha1(message: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(message);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashBuffer = await crypto.subtle.digest("SHA-1", data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("").toUpperCase();
 }
 
 /**
- * Determine risk level based on breach count
+ * Determine risk level based on how many times the password appeared in breaches
  */
 function getRiskLevel(
-  breachCount: number
+  count: number
 ): "low" | "medium" | "high" | "critical" {
-  if (breachCount === 0) return "low";
-  if (breachCount <= 1) return "medium";
-  if (breachCount <= 3) return "high";
+  if (count === 0) return "low";
+  if (count < 100) return "medium";
+  if (count < 10000) return "high";
   return "critical";
 }
 
 /**
- * Check if a password appears in the offline breach database
+ * Check a password against the Have I Been Pwned Pwned Passwords API
+ * Uses k-anonymity: only the first 5 chars of the SHA-1 hash are sent
+ * The full hash never leaves the browser
+ *
+ * @see https://haveibeenpwned.com/API/v3#PwnedPasswords
  */
-async function checkPasswordBreach(
+export async function checkPasswordBreach(
   password: string
 ): Promise<BreachCheckResult> {
-  const hash = await sha256(password);
-
-  const entry = BREACHED_PASSWORD_HASHES[hash];
-
-  if (!entry) {
+  if (!password || password.trim().length === 0) {
     return {
       isBreached: false,
       breachCount: 0,
-      breaches: [],
       riskLevel: "low",
-      hash,
     };
   }
 
-  const breaches: BreachRecord[] = entry.sources.map((sourceName) => {
-    const sourceInfo = BREACH_SOURCES[sourceName];
-    if (sourceInfo) return sourceInfo;
-    return {
-      source: sourceName,
-      date: "Unknown",
-      severity: "high" as const,
-      affectedCount: 0,
-    };
-  });
+  const hash = await sha1(password);
+  const prefix = hash.substring(0, 5);
+  const suffix = hash.substring(5);
 
-  return {
-    isBreached: true,
-    breachCount: entry.count,
-    breaches,
-    riskLevel: getRiskLevel(breaches.length),
-    hash,
-  };
-}
+  try {
+    const response = await fetch(
+      `https://api.pwnedpasswords.com/range/${prefix}`,
+      {
+        headers: {
+          "Add-Padding": "true", // Request padded responses for extra privacy
+        },
+      }
+    );
 
-/**
- * Check if an email domain appears in known breaches
- */
-async function checkEmailBreach(email: string): Promise<BreachCheckResult> {
-  const hash = await sha256(email.toLowerCase());
-  const emailLower = email.toLowerCase();
+    if (!response.ok) {
+      throw new Error(`HIBP API returned ${response.status}`);
+    }
 
-  const matchingBreaches: BreachRecord[] = [];
+    const text = await response.text();
+    const lines = text.split("\r\n");
 
-  for (const pattern of BREACHED_EMAIL_PATTERNS) {
-    if (emailLower.endsWith(pattern.pattern) || emailLower.includes("@")) {
-      // For demo purposes, check domain patterns
-      const domain = emailLower.split("@")[1];
-      if (domain && pattern.pattern.includes(domain)) {
-        matchingBreaches.push({
-          source: pattern.breachSource,
-          date: pattern.date,
-          severity:
-            pattern.affectedCount > 100000000 ? "critical" : "high",
-          affectedCount: pattern.affectedCount,
-        });
+    let breachCount = 0;
+    for (const line of lines) {
+      const [hashSuffix, count] = line.split(":");
+      if (hashSuffix === suffix) {
+        breachCount = parseInt(count, 10);
+        break;
       }
     }
-  }
 
-  // Simulate a probabilistic check — common email providers
-  const commonDomains = [
-    "gmail.com",
-    "yahoo.com",
-    "hotmail.com",
-    "outlook.com",
-    "aol.com",
-  ];
-  const domain = emailLower.split("@")[1];
-
-  if (domain && commonDomains.includes(domain)) {
-    // These large providers have had users appear in many breaches
-    if (matchingBreaches.length === 0) {
-      matchingBreaches.push({
-        source: "Various aggregated breaches",
-        date: "2019-01-17",
-        severity: "medium",
-        affectedCount: 773000000,
-      });
-    }
-  }
-
-  return {
-    isBreached: matchingBreaches.length > 0,
-    breachCount: matchingBreaches.length,
-    breaches: matchingBreaches,
-    riskLevel: getRiskLevel(matchingBreaches.length),
-    hash,
-  };
-}
-
-/**
- * Main breach check function
- * Works for both passwords and emails
- */
-export async function checkBreach(
-  input: string,
-  type: "password" | "email"
-): Promise<BreachCheckResult> {
-  if (!input || input.trim().length === 0) {
+    return {
+      isBreached: breachCount > 0,
+      breachCount,
+      riskLevel: getRiskLevel(breachCount),
+      hash,
+    };
+  } catch (error) {
+    // Network error — return an error state so UI can handle it
+    console.error("HIBP API error:", error);
     return {
       isBreached: false,
       breachCount: 0,
-      breaches: [],
       riskLevel: "low",
+      hash,
+      error: error instanceof Error ? error.message : "Failed to reach Have I Been Pwned API",
     };
   }
+}
 
-  if (type === "password") {
-    return checkPasswordBreach(input);
-  }
-  return checkEmailBreach(input);
+/**
+ * Main breach check function (password only)
+ */
+export async function checkBreach(
+  input: string
+): Promise<BreachCheckResult> {
+  return checkPasswordBreach(input);
 }

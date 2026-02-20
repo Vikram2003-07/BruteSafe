@@ -3,14 +3,13 @@
 import { cn } from "@/lib/utils";
 import type { BreachCheckResult } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ShieldCheck,
   ShieldAlert,
   AlertTriangle,
-  Calendar,
-  Users,
   Hash,
+  AlertCircle,
 } from "lucide-react";
 
 interface BreachDisplayProps {
@@ -36,11 +35,35 @@ function formatNumber(num: number): string {
   if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(1)}B`;
   if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
   if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
-  return num.toString();
+  return num.toLocaleString();
 }
 
 export function BreachDisplay({ result, className }: BreachDisplayProps) {
   const RiskIcon = riskIcons[result.riskLevel];
+
+  // Error state
+  if (result.error) {
+    return (
+      <div className={cn("space-y-4", className)}>
+        <Card className="border-2 border-yellow-500/30 bg-yellow-500/5">
+          <CardContent className="flex items-center gap-4 pt-6">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-yellow-500/15">
+              <AlertCircle className="h-7 w-7 text-yellow-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-yellow-500">
+                Unable to Check
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {result.error}. Please check your internet connection and try
+                again.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -79,8 +102,8 @@ export function BreachDisplay({ result, className }: BreachDisplayProps) {
             </h3>
             <p className="text-sm text-muted-foreground">
               {result.isBreached
-                ? `This appears in ${formatNumber(result.breachCount)} breached records across ${result.breaches.length} data breach(es).`
-                : "This was not found in our offline breach database. Stay vigilant!"}
+                ? `This password has been seen ${formatNumber(result.breachCount)} time(s) in data breaches. It should never be used.`
+                : "This password was not found in the Have I Been Pwned database. Keep it strong!"}
             </p>
           </div>
         </CardContent>
@@ -91,7 +114,7 @@ export function BreachDisplay({ result, className }: BreachDisplayProps) {
         <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-muted/30 p-3">
           <Hash className="h-4 w-4 text-muted-foreground shrink-0" />
           <code className="text-xs text-muted-foreground font-mono truncate">
-            SHA-256: {result.hash}
+            SHA-1: {result.hash}
           </code>
         </div>
       )}
@@ -108,55 +131,19 @@ export function BreachDisplay({ result, className }: BreachDisplayProps) {
         </Badge>
       </div>
 
-      {/* Breach details */}
-      {result.breaches.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-muted-foreground">
-            Breach Sources
-          </h4>
-          <div className="grid gap-3">
-            {result.breaches.map((breach, index) => (
-              <Card
-                key={index}
-                className="border-border/50 bg-card/50 backdrop-blur-sm"
-              >
-                <CardHeader className="pb-2 pt-4 px-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">
-                      {breach.source}
-                    </CardTitle>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-xs capitalize",
-                        riskColors[breach.severity],
-                      )}
-                    >
-                      {breach.severity}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-4 pb-4 pt-0">
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5" />
-                      <span>{breach.date}</span>
-                    </div>
-                    {breach.affectedCount > 0 && (
-                      <div className="flex items-center gap-1.5">
-                        <Users className="h-3.5 w-3.5" />
-                        <span>
-                          {formatNumber(breach.affectedCount)} affected
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* HIBP attribution */}
+      <p className="text-xs text-muted-foreground">
+        Powered by{" "}
+        <a
+          href="https://haveibeenpwned.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-emerald-400 hover:underline"
+        >
+          Have I Been Pwned
+        </a>{" "}
+        — Only the first 5 characters of the SHA-1 hash are sent (k-anonymity).
+      </p>
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { Shield } from "lucide-react";
-import Link from "next/link";
 
 export function Footer() {
   return (
@@ -16,44 +15,22 @@ export function Footer() {
             </span>
           </div>
 
-          {/* Links */}
-          <nav className="flex items-center gap-6 text-sm text-muted-foreground">
-            <Link
-              href="/strength-checker"
-              className="hover:text-foreground transition-colors"
-            >
-              Strength Checker
-            </Link>
-            <Link
-              href="/breach-check"
-              className="hover:text-foreground transition-colors"
-            >
-              Breach Check
-            </Link>
-            <Link
-              href="/generator"
-              className="hover:text-foreground transition-colors"
-            >
-              Generator
-            </Link>
-          </nav>
+          <div className="mt-6 border-t border-border/40 pt-6 text-center text-xs text-muted-foreground">
+            <p>
+              © {new Date().getFullYear()} BruteSafe. Built with ❤️ for
+              Privacy-Conscious Users.
+            </p>
+            <p className="mt-1">
+              No passwords are stored, transmitted, or logged. All processing
+              happens locally in your browser.
+            </p>
+          </div>
 
           {/* Privacy */}
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Zero-Knowledge • Client-Side Only • Open Source</span>
           </div>
-        </div>
-
-        <div className="mt-6 border-t border-border/40 pt-6 text-center text-xs text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} BruteSafe. Built with ❤️ for
-            Privacy-Conscious Users.
-          </p>
-          <p className="mt-1">
-            No passwords are stored, transmitted, or logged. All processing
-            happens locally in your browser.
-          </p>
         </div>
       </div>
     </footer>
