@@ -174,10 +174,6 @@ Contributions are welcome! Here's how you can help:
 
 Please make sure to update tests as appropriate.
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - [zxcvbn](https://github.com/dropbox/zxcvbn) - Password strength estimation
