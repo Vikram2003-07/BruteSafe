@@ -22,7 +22,6 @@
 - [Environment Variables](#environment-variables)
 - [Security & Privacy](#security--privacy)
 - [Contributing](#contributing)
-- [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 ## ✨ Features
